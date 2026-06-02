@@ -2,7 +2,7 @@
 
 AI-powered placement preparation platform — DSA practice, resume analysis, mock interviews, GitHub insights, and placement readiness scoring.
 
-**Current phase:** Phase 2 — Authentication System ✅
+**Current phase:** Phase 3 — Premium Landing Page ✅
 
 ---
 
@@ -129,6 +129,22 @@ interviewgpt/
 | `npm run db:migrate` | Create and run migrations |
 | `npm run db:studio` | Open Prisma Studio |
 | `npm run lint` | Type-check all packages |
+
+---
+
+## Phase 3 Testing Checklist
+
+- [ ] Homepage loads at `/` with all 10 sections
+- [ ] Navbar links scroll to Features, Pricing, Companies, FAQ
+- [ ] Mobile menu opens and closes correctly
+- [ ] Dark mode toggle works and persists on refresh
+- [ ] Hero CTAs link to `/register` and `#features`
+- [ ] Login / Get Started show Dashboard when authenticated
+- [ ] FAQ accordion expands and collapses
+- [ ] Pricing comparison table scrolls on mobile
+- [ ] `/login`, `/register`, `/dashboard` unchanged and working
+- [ ] Responsive layout on mobile (375px), tablet, desktop
+- [ ] `npm run build` succeeds
 
 ---
 
