@@ -2,7 +2,7 @@
 
 AI-powered placement preparation platform — DSA practice, resume analysis, mock interviews, GitHub insights, and placement readiness scoring.
 
-**Current phase:** Phase 3 — Premium Landing Page ✅
+**Current phase:** Phase 4 — Student Placement Dashboard ✅
 
 ---
 
@@ -129,6 +129,24 @@ interviewgpt/
 | `npm run db:migrate` | Create and run migrations |
 | `npm run db:studio` | Open Prisma Studio |
 | `npm run lint` | Type-check all packages |
+
+---
+
+## Phase 4 Testing Checklist
+
+- [ ] Login and navigate to `/dashboard`
+- [ ] Sidebar navigation visible (desktop) and mobile drawer works
+- [ ] Profile card shows user name, email, college, target role
+- [ ] Placement readiness ring and breakdown bars render
+- [ ] Metric cards show problems, resume, interview, GitHub scores
+- [ ] Recharts: weekly activity, readiness trend, skill radar
+- [ ] DSA progress widget with topic breakdown
+- [ ] Company readiness tracker lists seeded companies
+- [ ] Upcoming tasks widget shows recommendations
+- [ ] Dark mode toggle in dashboard navbar
+- [ ] Sidebar collapse persists on refresh
+- [ ] `GET /api/v1/dashboard` returns 200 when authenticated
+- [ ] Logout from dashboard navbar works
 
 ---
 
