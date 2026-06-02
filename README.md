@@ -2,7 +2,7 @@
 
 AI-powered placement preparation platform — DSA practice, resume analysis, mock interviews, GitHub insights, and placement readiness scoring.
 
-**Current phase:** Phase 1 — Project Foundation ✅
+**Current phase:** Phase 2 — Authentication System ✅
 
 ---
 
@@ -129,6 +129,22 @@ interviewgpt/
 | `npm run db:migrate` | Create and run migrations |
 | `npm run db:studio` | Open Prisma Studio |
 | `npm run lint` | Type-check all packages |
+
+---
+
+## Phase 2 Testing Checklist
+
+- [ ] Register new student at `/register` → redirects to `/dashboard`
+- [ ] Logout → cookies cleared, redirects to `/login`
+- [ ] Login with registered credentials → dashboard loads
+- [ ] `GET /api/v1/auth/me` returns user when cookies set
+- [ ] Forgot password logs reset URL in API terminal (dev)
+- [ ] Reset password with token from URL → can login with new password
+- [ ] Access `/dashboard` without auth → redirects to `/login`
+- [ ] Admin login (`admin@interviewgpt.dev`) → `GET /api/v1/admin/ping` succeeds
+- [ ] Student login → `GET /api/v1/admin/ping` returns 403
+- [ ] Google OAuth works when `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set
+- [ ] Rate limit: 11 rapid login attempts → 429 response
 
 ---
 

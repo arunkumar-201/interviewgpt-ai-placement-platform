@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useQuery } from '@tanstack/react-query';
 import { CheckCircle2, Loader2, Server, XCircle } from 'lucide-react';
+import { useAuth } from '@/features/auth/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { fetchHealth, fetchReady } from '@/lib/api-client';
@@ -22,6 +24,8 @@ function StatusBadge({ ok, label }: { ok: boolean; label: string }) {
 }
 
 export function HomePage() {
+  const { isAuthenticated } = useAuth();
+
   const healthQuery = useQuery({
     queryKey: ['health'],
     queryFn: fetchHealth,
@@ -46,10 +50,20 @@ export function HomePage() {
             <span className="text-lg font-semibold tracking-tight">InterviewGPT</span>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm">
-              Sign in
-            </Button>
-            <Button size="sm">Get Started</Button>
+            {isAuthenticated ? (
+              <Button size="sm" asChild>
+                <Link to="/dashboard">Dashboard</Link>
+              </Button>
+            ) : (
+              <>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/login">Sign in</Link>
+                </Button>
+                <Button size="sm" asChild>
+                  <Link to="/register">Get Started</Link>
+                </Button>
+              </>
+            )}
           </div>
         </div>
       </header>

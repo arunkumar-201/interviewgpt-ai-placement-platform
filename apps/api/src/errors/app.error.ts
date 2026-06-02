@@ -21,3 +21,27 @@ export class ValidationError extends AppError {
     super(400, 'VALIDATION_ERROR', 'Invalid input', details);
   }
 }
+
+export class UnauthorizedError extends AppError {
+  constructor(message = 'Unauthorized') {
+    super(401, 'UNAUTHORIZED', message);
+  }
+}
+
+export class ForbiddenError extends AppError {
+  constructor(message = 'Forbidden') {
+    super(403, 'FORBIDDEN', message);
+  }
+}
+
+export class ConflictError extends AppError {
+  constructor(message = 'Conflict') {
+    super(409, 'CONFLICT', message);
+  }
+}
+
+export class TooManyRequestsError extends AppError {
+  constructor(message = 'Too many requests') {
+    super(429, 'TOO_MANY_REQUESTS', message);
+  }
+}

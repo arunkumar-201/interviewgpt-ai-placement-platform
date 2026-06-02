@@ -36,3 +36,4 @@ apps/web/.vite/
 
 # Docker
 .docker/
+node_modules
