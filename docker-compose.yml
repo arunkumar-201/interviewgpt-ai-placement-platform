@@ -1,0 +1,78 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: interviewgpt-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: interviewgpt
+      POSTGRES_PASSWORD: interviewgpt_secret
+      POSTGRES_DB: interviewgpt
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U interviewgpt -d interviewgpt']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: interviewgpt-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.api
+    container_name: interviewgpt-api
+    restart: unless-stopped
+    ports:
+      - '4000:4000'
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: postgresql://interviewgpt:interviewgpt_secret@postgres:5432/interviewgpt?schema=public
+      REDIS_URL: redis://redis:6379
+      NODE_ENV: development
+    volumes:
+      - ./apps/api/src:/app/apps/api/src
+      - ./packages/shared/src:/app/packages/shared/src
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: sh -c "npm run db:push -w @interviewgpt/api && npm run dev -w @interviewgpt/api"
+
+  web:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.web
+    container_name: interviewgpt-web
+    restart: unless-stopped
+    ports:
+      - '5173:5173'
+    environment:
+      VITE_API_URL: http://localhost:4000/api/v1
+    volumes:
+      - ./apps/web/src:/app/apps/web/src
+      - ./apps/web/index.html:/app/apps/web/index.html
+      - ./packages/shared/src:/app/packages/shared/src
+    depends_on:
+      - api
+    command: npm run dev -w @interviewgpt/web -- --host 0.0.0.0
+
+volumes:
+  postgres_data:
+  redis_data:

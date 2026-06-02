@@ -1,0 +1,27 @@
+{
+  "name": "interviewgpt",
+  "version": "1.0.0",
+  "private": true,
+  "description": "InterviewGPT — AI Placement Preparation Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently -n api,web -c blue,green \"npm run dev -w @interviewgpt/api\" \"npm run dev -w @interviewgpt/web\"",
+    "build": "npm run build -w @interviewgpt/shared && npm run build -w @interviewgpt/api && npm run build -w @interviewgpt/web",
+    "lint": "npm run lint -w @interviewgpt/api && npm run lint -w @interviewgpt/web",
+    "db:generate": "npm run db:generate -w @interviewgpt/api",
+    "db:migrate": "npm run db:migrate -w @interviewgpt/api",
+    "db:push": "npm run db:push -w @interviewgpt/api",
+    "db:studio": "npm run db:studio -w @interviewgpt/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
