@@ -32,6 +32,7 @@ export interface DsaProgress {
   easy: number;
   medium: number;
   hard: number;
+  acceptanceRate: number;
   topicProgress: TopicProgress[];
   weeklyActivity: WeeklyActivityPoint[];
 }
@@ -111,11 +112,22 @@ export interface DashboardProfile {
   graduationYear: number | null;
 }
 
+export interface RecentSubmission {
+  id: string;
+  problemTitle: string;
+  problemSlug: string;
+  status: string;
+  language: string;
+  runtimeMs: number | null;
+  createdAt: string;
+}
+
 export interface DashboardData {
   profile: DashboardProfile;
   metrics: DashboardMetrics;
   readinessBreakdown: ReadinessBreakdown;
   dsaProgress: DsaProgress;
+  recentSubmissions: RecentSubmission[];
   leetcode: LeetCodeAnalytics | null;
   github: GitHubAnalytics | null;
   resume: ResumeSummary | null;

@@ -44,16 +44,21 @@ services:
     environment:
       DATABASE_URL: postgresql://interviewgpt:interviewgpt_secret@postgres:5432/interviewgpt?schema=public
       REDIS_URL: redis://redis:6379
+      JUDGE0_API_URL: http://judge0-server:2358
+      JUDGE0_LOCAL_FALLBACK: 'true'
       NODE_ENV: development
     volumes:
       - ./apps/api/src:/app/apps/api/src
+      - ./apps/api/prisma:/app/apps/api/prisma
       - ./packages/shared/src:/app/packages/shared/src
     depends_on:
       postgres:
         condition: service_healthy
       redis:
         condition: service_healthy
-    command: sh -c "npm run db:push -w @interviewgpt/api && npm run dev -w @interviewgpt/api"
+      judge0-server:
+        condition: service_started
+    command: sh -c "npx prisma db push --accept-data-loss && npm run dev -w @interviewgpt/api"
 
   web:
     build:
@@ -73,6 +78,66 @@ services:
       - api
     command: npm run dev -w @interviewgpt/web -- --host 0.0.0.0
 
+  judge0-db:
+    image: postgres:13-alpine
+    container_name: interviewgpt-judge0-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0_secret
+      POSTGRES_DB: judge0
+    volumes:
+      - judge0_db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U judge0 -d judge0']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  judge0-redis:
+    image: redis:7-alpine
+    container_name: interviewgpt-judge0-redis
+    restart: unless-stopped
+    command: redis-server --appendonly no
+
+  judge0-server:
+    image: judge0/judge0:1.13.0
+    container_name: interviewgpt-judge0-server
+    restart: unless-stopped
+    privileged: true
+    ports:
+      - '2358:2358'
+    environment:
+      REDIS_HOST: judge0-redis
+      POSTGRES_HOST: judge0-db
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0_secret
+    depends_on:
+      judge0-db:
+        condition: service_healthy
+      judge0-redis:
+        condition: service_started
+
+  judge0-worker:
+    image: judge0/judge0:1.13.0
+    container_name: interviewgpt-judge0-worker
+    restart: unless-stopped
+    privileged: true
+    command: ['./scripts/workers']
+    environment:
+      REDIS_HOST: judge0-redis
+      POSTGRES_HOST: judge0-db
+      POSTGRES_DB: judge0
+      POSTGRES_USER: judge0
+      POSTGRES_PASSWORD: judge0_secret
+    depends_on:
+      judge0-db:
+        condition: service_healthy
+      judge0-redis:
+        condition: service_started
+
 volumes:
   postgres_data:
   redis_data:
+  judge0_db_data:

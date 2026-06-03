@@ -45,3 +45,9 @@ export class TooManyRequestsError extends AppError {
     super(429, 'TOO_MANY_REQUESTS', message);
   }
 }
+
+export class ExternalServiceError extends AppError {
+  constructor(message = 'External service error') {
+    super(502, 'EXTERNAL_SERVICE_ERROR', message);
+  }
+}

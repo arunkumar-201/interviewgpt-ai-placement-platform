@@ -24,7 +24,7 @@ const NAV_ITEMS: {
   disabled?: boolean;
 }[] = [
   { label: 'Overview', href: '/dashboard', icon: LayoutDashboard },
-  { label: 'DSA Arena', href: '/dashboard#dsa', icon: Code2, disabled: true },
+  { label: 'DSA Arena', href: '/dsa', icon: Code2 },
   { label: 'Mock Interview', href: '/dashboard#interview', icon: MessageSquare, disabled: true },
   { label: 'Resume', href: '/dashboard#resume', icon: FileText, disabled: true },
   { label: 'GitHub', href: '/dashboard#github', icon: Github, disabled: true },
@@ -72,7 +72,10 @@ export function DashboardSidebar({ mobile }: DashboardSidebarProps) {
 
       <nav className="flex-1 space-y-1 p-3">
         {NAV_ITEMS.map((item) => {
-          const isActive = location.pathname === item.href && !item.href.includes('#');
+          const isActive =
+            item.href === '/dsa'
+              ? location.pathname.startsWith('/dsa')
+              : location.pathname === item.href && !item.href.includes('#');
           const Icon = item.icon;
 
           return (

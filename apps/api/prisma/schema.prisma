@@ -33,6 +33,7 @@ enum DsaTopic {
   GRAPHS
   DP
   GREEDY
+  BINARY_SEARCH
 }
 
 enum SubmissionStatus {
@@ -239,20 +240,30 @@ model Notification {
 // ─── DSA Module (Phase 5) ────────────────────────────────────────────────────
 
 model DsaProblem {
-  id            String     @id @default(cuid())
-  slug          String     @unique
-  title         String
-  description   String     @db.Text
-  difficulty    Difficulty
-  topic         DsaTopic
-  constraints   String?    @db.Text
-  examples      Json
-  starterCode   Json
-  timeLimitMs   Int        @default(2000)
-  memoryLimitMb Int        @default(256)
-  isPublished   Boolean    @default(false)
-  createdAt     DateTime   @default(now())
-  updatedAt     DateTime   @updatedAt
+  id              String     @id @default(cuid())
+  slug            String     @unique
+  title           String
+  description     String     @db.Text
+  fullDescription String?    @db.Text
+  difficulty      Difficulty
+  topic           DsaTopic
+  tags            String[]   @default([])
+  companies       String[]   @default([])
+  constraints     String?    @db.Text
+  examples        Json
+  edgeCases       Json       @default("[]")
+  hints           Json       @default("[]")
+  followUp        String?    @db.Text
+  starterCode     Json
+  editorial       Json?
+  relatedSlugs    String[]   @default([])
+  acceptanceRate  Float      @default(0)
+  orderIndex      Int        @default(0)
+  timeLimitMs     Int        @default(2000)
+  memoryLimitMb   Int        @default(256)
+  isPublished     Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
 
   testCases   TestCase[]
   submissions Submission[]
@@ -261,6 +272,7 @@ model DsaProblem {
   @@index([difficulty])
   @@index([topic])
   @@index([isPublished])
+  @@index([orderIndex])
 }
 
 model TestCase {

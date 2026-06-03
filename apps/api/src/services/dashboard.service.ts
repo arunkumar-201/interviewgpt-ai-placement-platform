@@ -102,6 +102,30 @@ export class DashboardService {
     const weeklyActivity = await this.getWeeklySubmissionActivity(userId);
     const topicProgress = await this.getTopicProgress(userId);
 
+    const [submissionTotal, submissionAccepted, recentSubmissionRows] = await Promise.all([
+      prisma.submission.count({ where: { userId } }),
+      prisma.submission.count({ where: { userId, status: 'ACCEPTED' } }),
+      prisma.submission.findMany({
+        where: { userId },
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+        include: { problem: { select: { title: true, slug: true } } },
+      }),
+    ]);
+
+    const dsaAcceptanceRate =
+      submissionTotal > 0 ? Math.round((submissionAccepted / submissionTotal) * 1000) / 10 : 0;
+
+    const recentSubmissions = recentSubmissionRows.map((s) => ({
+      id: s.id,
+      problemTitle: s.problem.title,
+      problemSlug: s.problem.slug,
+      status: s.status,
+      language: s.language,
+      runtimeMs: s.runtimeMs,
+      createdAt: s.createdAt.toISOString(),
+    }));
+
     const companies = await prisma.company.findMany({
       where: { isActive: true },
       include: { _count: { select: { questions: true } } },
@@ -179,9 +203,11 @@ export class DashboardService {
         easy: await this.countSolvedByDifficulty(userId, 'EASY'),
         medium: await this.countSolvedByDifficulty(userId, 'MEDIUM'),
         hard: await this.countSolvedByDifficulty(userId, 'HARD'),
+        acceptanceRate: dsaAcceptanceRate,
         topicProgress,
         weeklyActivity,
       },
+      recentSubmissions,
       leetcode: user.leetcodeProfile
         ? {
             username: user.leetcodeProfile.username,

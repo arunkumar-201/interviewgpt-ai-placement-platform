@@ -7,6 +7,8 @@ import { ProtectedRoute } from '@/components/auth/ProtectedRoute';
 import { GuestRoute } from '@/components/auth/GuestRoute';
 import { HomePage } from '@/pages/HomePage';
 import { DashboardPage } from '@/pages/DashboardPage';
+import { ProblemsListPage } from '@/features/dsa/pages/ProblemsListPage';
+import { ProblemDetailPage } from '@/features/dsa/pages/ProblemDetailPage';
 import { LoginPage } from '@/features/auth/pages/LoginPage';
 import { RegisterPage } from '@/features/auth/pages/RegisterPage';
 import { ForgotPasswordPage } from '@/features/auth/pages/ForgotPasswordPage';
@@ -46,6 +48,22 @@ export function App() {
                 element={
                   <ProtectedRoute>
                     <DashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dsa"
+                element={
+                  <ProtectedRoute>
+                    <ProblemsListPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/dsa/:slug"
+                element={
+                  <ProtectedRoute>
+                    <ProblemDetailPage />
                   </ProtectedRoute>
                 }
               />

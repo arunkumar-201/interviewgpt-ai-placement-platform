@@ -30,6 +30,14 @@ const envSchema = z.object({
   ADMIN_NAME: z.string().optional(),
 
   PASSWORD_RESET_EXPIRES_HOURS: z.coerce.number().default(1),
+
+  JUDGE0_API_URL: z.string().url().default('http://localhost:2358'),
+  JUDGE0_API_KEY: z.string().optional(),
+  JUDGE0_RAPIDAPI_HOST: z.string().optional(),
+  JUDGE0_LOCAL_FALLBACK: z
+    .string()
+    .optional()
+    .transform((v) => v === 'true' || v === '1'),
 });
 
 export type Env = z.infer<typeof envSchema>;
@@ -53,3 +61,7 @@ export const isGoogleOAuthEnabled = Boolean(
 
 export const cookieSecure =
   env.COOKIE_SECURE ?? env.NODE_ENV === 'production';
+
+/** Local Python/JS executor when Judge0 is unreachable (default on in development). */
+export const isJudge0LocalFallbackEnabled =
+  env.JUDGE0_LOCAL_FALLBACK ?? env.NODE_ENV === 'development';

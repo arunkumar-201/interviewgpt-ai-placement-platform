@@ -1,6 +1,7 @@
 import { PrismaClient, Role, AuthProvider } from '@prisma/client';
 import { DEFAULT_COMPANIES } from '@interviewgpt/shared';
 import bcrypt from 'bcrypt';
+import { seedDsa } from './seed-dsa.js';
 
 const prisma = new PrismaClient();
 
@@ -57,6 +58,7 @@ async function seedAdmin() {
 async function main() {
   await seedCompanies();
   await seedAdmin();
+  await seedDsa(prisma);
 }
 
 main()

@@ -7,6 +7,7 @@ import { ProfileCard } from '../components/ProfileCard';
 import { ReadinessScoreCard } from '../components/ReadinessScoreCard';
 import { MetricCards } from '../components/MetricCards';
 import { DsaProgressWidget } from '../components/DsaProgressWidget';
+import { RecentSubmissionsWidget } from '../components/RecentSubmissionsWidget';
 import { LeetCodeAnalytics } from '../components/LeetCodeAnalytics';
 import { GitHubAnalytics } from '../components/GitHubAnalytics';
 import { ResumeScoreCard } from '../components/ResumeScoreCard';
@@ -57,6 +58,7 @@ export function DashboardPage() {
           <div className="grid gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-6">
               <DsaProgressWidget data={data.dsaProgress} />
+              <RecentSubmissionsWidget submissions={data.recentSubmissions} />
               <InterviewHistory interviews={data.interviews} />
               <CompanyReadinessTracker companies={data.companyReadiness} />
             </div>

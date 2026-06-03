@@ -1,8 +1,10 @@
+import { Link } from 'react-router-dom';
 import { Code2 } from 'lucide-react';
 import type { DsaProgress } from '@interviewgpt/shared';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 
 interface DsaProgressWidgetProps {
   data: DsaProgress;
@@ -13,14 +15,20 @@ export function DsaProgressWidget({ data }: DsaProgressWidgetProps) {
 
   return (
     <Card id="dsa" className="scroll-mt-24 border-border/60">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Code2 className="h-5 w-5 text-violet-500" />
-          DSA Progress
-        </CardTitle>
-        <CardDescription>
-          {data.solved} of {data.total} problems solved ({pct}%)
-        </CardDescription>
+      <CardHeader className="flex flex-row items-start justify-between gap-2">
+        <div>
+          <CardTitle className="flex items-center gap-2">
+            <Code2 className="h-5 w-5 text-violet-500" />
+            DSA Progress
+          </CardTitle>
+          <CardDescription>
+            {data.solved} of {data.total} problems solved ({pct}%) · {data.acceptanceRate}%
+            acceptance
+          </CardDescription>
+        </div>
+        <Button variant="outline" size="sm" asChild>
+          <Link to="/dsa">Open Arena</Link>
+        </Button>
       </CardHeader>
       <CardContent className="space-y-6">
         <Progress value={pct} className="h-2" />
